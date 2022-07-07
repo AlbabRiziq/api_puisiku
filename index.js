@@ -80,14 +80,16 @@ mongoose
       }
     });
     app.post("/api/create", async (req, res) => {
-      const { author, title, puisi, puisi_with_header } = req.query;
-      const user = new Puisi({
+      const { author, title, puisi, puisi_with_header, comment } = req.query;
+      const puisinya = new Puisi({
         puisi,
         title,
         author,
         puisi_with_header,
         comment,
       });
+      console.log(puisinya);
+      await puisinya.save();
     });
 
     app.get("/api/puisi/acak", async (req, res) => {
@@ -105,6 +107,23 @@ mongoose
       fs.readFile("./puisi.json", "utf-8", (err, data) => {
         res.json(JSON.parse(data)[req.params.id]);
         console.log(JSON.parse(data)[req.params.id]);
+      });
+    });
+    app.get("/api/kiriman/", (req, res) => {
+      Puisi.find({}, (err, data) => {
+        res.json(data);
+      });
+    });
+    app.get("/api/kiriman/:index", (req, res) => {
+      Puisi.find({}, (err, data) => {
+        res.json(data[req.params.index]);
+      });
+    });
+    app.get("/api/kirimann/acak", (req, res) => {
+      Puisi.find({}, (err, data) => {
+        // const panjangData = data.length;
+        // const acak = Math.floor(Math.random() * panjangData);
+        res.json(data[Math.floor(Math.random() * data.length)]);
       });
     });
   });
